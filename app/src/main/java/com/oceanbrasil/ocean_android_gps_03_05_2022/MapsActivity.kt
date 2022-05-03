@@ -1,5 +1,6 @@
 package com.oceanbrasil.ocean_android_gps_03_05_2022
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -7,6 +8,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.oceanbrasil.ocean_android_gps_03_05_2022.databinding.ActivityMapsBinding
@@ -44,5 +46,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oceanSp = LatLng(-23.556730534318714, -46.733184596313315)
         mMap.addMarker(MarkerOptions().position(oceanSp).title("Ocean SP - USP"))
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(oceanSp, 18.5f))
+
+        mMap.addCircle(
+            CircleOptions()
+                .center(oceanSp)
+                .radius(40.0)
+                .strokeWidth(0f)
+                .fillColor(Color.parseColor("#537CDBE7"))
+        )
     }
 }
