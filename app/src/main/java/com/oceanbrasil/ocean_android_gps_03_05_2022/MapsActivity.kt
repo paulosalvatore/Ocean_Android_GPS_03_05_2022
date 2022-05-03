@@ -66,7 +66,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun iniciarLocalizacao() {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val locationProvider = LocationManager.GPS_PROVIDER
+        val locationProvider = LocationManager.NETWORK_PROVIDER
 
         if (ActivityCompat.checkSelfPermission(
                 this,
