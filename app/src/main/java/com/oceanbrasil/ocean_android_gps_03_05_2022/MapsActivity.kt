@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.widget.Toast
@@ -89,6 +91,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
 
+        // Última localização
         val ultimaLocalizacao = locationManager.getLastKnownLocation(locationProvider)
 
         Toast.makeText(this, ultimaLocalizacao.toString(), Toast.LENGTH_LONG).show()
@@ -97,6 +100,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val latLng = LatLng(it.latitude, it.longitude)
 
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f))
+        }
+
+        // Pegar informações do GPS em tempo real
+        locationManager.requestLocationUpdates(
+            locationProvider,
+            1000,
+            1F
+        ) {
+            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+
+            val latLng = LatLng(it.latitude, it.longitude)
+
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.5f))
         }
     }
 
