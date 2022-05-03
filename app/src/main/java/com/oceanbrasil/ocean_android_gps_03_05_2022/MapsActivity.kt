@@ -1,9 +1,14 @@
 package com.oceanbrasil.ocean_android_gps_03_05_2022
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.location.LocationManager
 import android.os.Bundle
-
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -54,5 +59,58 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .strokeWidth(0f)
                 .fillColor(Color.parseColor("#537CDBE7"))
         )
+
+        iniciarLocalizacao()
+    }
+
+    private fun iniciarLocalizacao() {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val locationProvider = LocationManager.GPS_PROVIDER
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                1
+            )
+
+            // Encerra a função iniciarLocalizacao()
+            return
+        }
+
+        val ultimaLocalizacao = locationManager.getLastKnownLocation(locationProvider)
+
+        Toast.makeText(this, ultimaLocalizacao.toString(), Toast.LENGTH_LONG).show()
+
+        ultimaLocalizacao?.let {
+            val latLng = LatLng(it.latitude, it.longitude)
+
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.5f))
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == 1
+            && (grantResults[0] == PackageManager.PERMISSION_GRANTED
+            || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+            iniciarLocalizacao()
+        }
     }
 }
